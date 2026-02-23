@@ -1509,7 +1509,6 @@ Command={self.libexecdir}/cockpit-session
         self.assertIn('sudo', bridge_names)
 
 
-@testlib.skipImage("TODO: fix for OpenSUSE", "opensuse-tumbleweed")
 class TestReverseProxy(testlib.MachineCase):
 
     provision = {
@@ -1541,7 +1540,7 @@ ProtocolHeader = X-Forwarded-Proto
         # should use nginx' certificate, not cockpit's; use --resolve so that SNI matches the certificate's CN
         (https_host, https_port) = self.machine.forward["443"].split(':')
         return subprocess.check_output(
-            ["curl", "--verbose",
+            ["curl", "--verbose", "--http1.1",
              "--resolve", f"alice:{https_port}:{https_host}",
              "--cacert", os.path.join(testlib.TEST_DIR, "../src/tls/ca/ca.pem"),
              *args,
